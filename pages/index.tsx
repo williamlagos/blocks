@@ -1,14 +1,27 @@
+import axios, { AxiosResponse } from 'axios'
 import { Box, DataTable, Text, Meter, Heading } from 'grommet'
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import { useEffect, useState } from 'react'
+import { Block } from './api/blocks'
+
+const fetchBlocks = async () => {
+  let res = { data: [] }
+  try {
+    res = await axios.get("/api/blocks")
+  } catch (e) {
+    console.error(e)
+  } finally {
+    return res.data
+  }
+}
 
 const Home: NextPage = () => {
-  const blocks = [
-    { hash: "Alan", time: 20, height: 1 },
-    { hash: "Bryan", time: 30, height: 1 },
-    { hash: "Chris", time: 40, height: 1 },
-    { hash: "Eric", time: 80, height: 1 },
-  ] 
+
+  const [blocks, setBlocks] = useState([])
+
+  useEffect(() => { (async () => setBlocks(await fetchBlocks()))() }, [])
+
   return (
     <Box
       flex
@@ -31,16 +44,7 @@ const Home: NextPage = () => {
           },
           {
             property: "time",
-            header: "Time",
-            render: datum => (
-              <Box pad={{ vertical: "xsmall" }}>
-                <Meter
-                  values={[{ value: datum.time }]}
-                  thickness="small"
-                  size="small"
-                />
-              </Box>
-            ),
+            header: <Text>Time</Text>,
           },
           {
             property: "height",
@@ -48,9 +52,7 @@ const Home: NextPage = () => {
           }
           ]}
           data={blocks}
-      >
-
-      </DataTable>
+      />
     </Box>
   )
 }

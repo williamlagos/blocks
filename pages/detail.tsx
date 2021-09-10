@@ -1,14 +1,27 @@
+import axios from 'axios'
 import { Box, DataTable, Text, Meter, Heading } from 'grommet'
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import { useEffect, useState } from 'react'
+import { RawBlock } from './api/rawblock'
+
+const fetchBlock = async () => {
+  let res = { data: [] }
+  try {
+    res = await axios.get("/api/rawblock")
+  } catch (e) {
+    console.error(e)
+  } finally {
+    return res.data
+  }
+}
 
 const Detail: NextPage = () => {
-  const blocks = [
-    { prev_block: "Alan", size: 20, block_index: 1 },
-    { prev_block: "Bryan", size: 30, block_index: 1 },
-    { prev_block: "Chris", size: 40, block_index: 1 },
-    { prev_block: "Eric", size: 80, block_index: 1 },
-  ] 
+
+  const [block, setBlock] = useState([])
+
+  useEffect(() => { (async () => setBlock(await fetchBlock()))() }, [])
+  
   return (
     <Box
       flex
@@ -31,26 +44,15 @@ const Detail: NextPage = () => {
           },
           {
             property: "size",
-            header: "Size",
-            render: datum => (
-              <Box pad={{ vertical: "xsmall" }}>
-                <Meter
-                  values={[{ value: datum.size }]}
-                  thickness="small"
-                  size="small"
-                />
-              </Box>
-            ),
+            header: <Text>Size</Text>,
           },
           {
             property: "block_index",
             header: <Text>Block Index</Text>
           }
           ]}
-          data={blocks}
-      >
-
-      </DataTable>
+          data={block}
+      />
     </Box>
   )
 }
