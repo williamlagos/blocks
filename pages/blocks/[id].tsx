@@ -1,14 +1,16 @@
-import axios from 'axios'
-import { Box, DataTable, Text, Meter, Heading } from 'grommet'
-import type { NextPage } from 'next'
+import Link from 'next/link'
 import Head from 'next/head'
+import type { NextPage } from 'next'
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { RawBlock } from './api/rawblock'
+import { Box, DataTable, Text, Meter, Heading, Button } from 'grommet'
+import axios from 'axios'
 
-const fetchBlock = async () => {
+const fetchBlock = async (id: string = "") => {
   let res = { data: [] }
+  console.log(id)
   try {
-    res = await axios.get("/api/rawblock")
+    res = await axios.get(`/api/blocks/${id}`)
   } catch (e) {
     console.error(e)
   } finally {
@@ -18,9 +20,12 @@ const fetchBlock = async () => {
 
 const Detail: NextPage = () => {
 
+  const router = useRouter()
+  const { id } = router.query
+
   const [block, setBlock] = useState([])
 
-  useEffect(() => { (async () => setBlock(await fetchBlock()))() }, [])
+  useEffect(() => { (async () => setBlock(await fetchBlock(id?.toString())))() }, [])
   
   return (
     <Box
@@ -28,6 +33,7 @@ const Detail: NextPage = () => {
       margin={{ horizontal: "auto" }}
       width={{ max: "xlarge" }}
       height={{ min: "100%" }}
+      gap="medium"
     >
       <Head>
         <title>Block Detail</title>
@@ -53,6 +59,13 @@ const Detail: NextPage = () => {
           ]}
           data={block}
       />
+      <Link passHref href="/blocks/">
+        <Button 
+          primary 
+          alignSelf="start"
+          label="Back to Blocks"
+        />
+      </Link>
     </Box>
   )
 }

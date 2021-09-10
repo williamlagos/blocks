@@ -1,9 +1,10 @@
-import axios, { AxiosResponse } from 'axios'
-import { Box, DataTable, Text, Meter, Heading } from 'grommet'
-import type { NextPage } from 'next'
+import Link from 'next/link'
 import Head from 'next/head'
-import { useEffect, useState } from 'react'
-import { Block } from './api/blocks'
+import type { Block } from '../api/blocks'
+import type { NextPage } from 'next'
+import React, { useEffect, useState } from 'react'
+import { Box, DataTable, Text, Meter, Heading, Anchor } from 'grommet'
+import axios, { AxiosResponse } from 'axios'
 
 const fetchBlocks = async () => {
   let res = { data: [] }
@@ -28,6 +29,7 @@ const Home: NextPage = () => {
       margin={{ horizontal: "auto" }}
       width={{ max: "xlarge" }}
       height={{ min: "100%" }}
+      gap="medium"
     >
       <Head>
         <title>Blocks</title>
@@ -40,6 +42,11 @@ const Home: NextPage = () => {
           {
             property: "hash",
             header: <Text>Hash</Text>,
+            render: (datum: Block) => (
+              <Link passHref href={`/blocks/${datum.hash}`}>
+                <Anchor label={datum.hash}></Anchor>
+              </Link>
+            ),
             primary: true,
           },
           {
