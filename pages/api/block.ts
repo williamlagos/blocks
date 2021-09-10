@@ -2,8 +2,8 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 type Block = {
   hash: string,
-  time: number,
-  height: number
+  height: number,
+  time: number
 }
 
 export default function handler(
@@ -12,7 +12,7 @@ export default function handler(
 ) {
   res.status(200).json({
     hash: "abc",
-    time: 1,
-    height: 1
+    height: 1,
+    time: 1
   })
 }

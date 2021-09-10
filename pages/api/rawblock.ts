@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 type RawBlock = {
-  size: number,
+  prev_block: string,
   block_index: number,
-  prev_block: string
+  size: number
 }
 
 export default function handler(
@@ -11,8 +11,8 @@ export default function handler(
   res: NextApiResponse<RawBlock>
 ) {
   res.status(200).json({
-    size: 1,
+    prev_block: "abc",
     block_index: 1,
-    prev_block: "abc"
+    size: 1
   })
 }

@@ -2,12 +2,12 @@ import { Box, DataTable, Text, Meter, Heading } from 'grommet'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 
-const Home: NextPage = () => {
+const Detail: NextPage = () => {
   const blocks = [
-    { hash: "Alan", time: 20, height: 1 },
-    { hash: "Bryan", time: 30, height: 1 },
-    { hash: "Chris", time: 40, height: 1 },
-    { hash: "Eric", time: 80, height: 1 },
+    { prev_block: "Alan", size: 20, block_index: 1 },
+    { prev_block: "Bryan", size: 30, block_index: 1 },
+    { prev_block: "Chris", size: 40, block_index: 1 },
+    { prev_block: "Eric", size: 80, block_index: 1 },
   ] 
   return (
     <Box
@@ -17,25 +17,25 @@ const Home: NextPage = () => {
       height={{ min: "100%" }}
     >
       <Head>
-        <title>Blocks</title>
+        <title>Block Detail</title>
         <meta name="description" content="Block Table View" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Heading>Blocks</Heading>
+      <Heading>Block Detail</Heading>
       <DataTable
         columns={[
           {
-            property: "hash",
-            header: <Text>Hash</Text>,
+            property: "prev_block",
+            header: <Text>Previous Block</Text>,
             primary: true,
           },
           {
-            property: "time",
-            header: "Time",
+            property: "size",
+            header: "Size",
             render: datum => (
               <Box pad={{ vertical: "xsmall" }}>
                 <Meter
-                  values={[{ value: datum.time }]}
+                  values={[{ value: datum.size }]}
                   thickness="small"
                   size="small"
                 />
@@ -43,8 +43,8 @@ const Home: NextPage = () => {
             ),
           },
           {
-            property: "height",
-            header: <Text>Height</Text>
+            property: "block_index",
+            header: <Text>Block Index</Text>
           }
           ]}
           data={blocks}
@@ -55,4 +55,4 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+export default Detail
