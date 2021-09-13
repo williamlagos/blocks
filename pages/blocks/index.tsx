@@ -5,6 +5,7 @@ import type { NextPage } from 'next'
 import React, { useEffect, useState } from 'react'
 import { Box, DataTable, Text, Meter, Heading, Anchor } from 'grommet'
 import axios, { AxiosResponse } from 'axios'
+import Layout from '../../components/layout'
 
 const fetchBlocks = async () => {
   let res = { data: [] }
@@ -24,19 +25,7 @@ const Home: NextPage = () => {
   useEffect(() => { (async () => setBlocks(await fetchBlocks()))() }, [])
 
   return (
-    <Box
-      flex
-      margin={{ horizontal: "auto" }}
-      width={{ max: "xlarge" }}
-      height={{ min: "100%" }}
-      gap="medium"
-    >
-      <Head>
-        <title>Blocks</title>
-        <meta name="description" content="Block Table View" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <Heading>Blocks</Heading>
+    <Layout title="Blocks" description="Block Table View">
       <DataTable
         columns={[
           {
@@ -65,7 +54,7 @@ const Home: NextPage = () => {
           }}
         data={blocks}
       />
-    </Box>
+    </Layout>
   )
 }
 

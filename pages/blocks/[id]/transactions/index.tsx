@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Box, DataTable, Text, Heading, Button, Pagination } from 'grommet'
 import axios from 'axios'
+import Layout from '../../../../components/layout'
 
 const fetchBlock = async (id: string = "") => {
   let res = { data: [] }
@@ -27,20 +28,8 @@ const Detail: NextPage = () => {
   useEffect(() => { (async () => setBlock(await fetchBlock(id?.toString())))() }, [id])
   
   return (
-    <Box
-      flex
-      margin={{ horizontal: "auto" }}
-      width={{ max: "xlarge" }}
-      height={{ min: "100%" }}
-      gap="medium"
-    >
-      <Head>
-        <title>Transaction Detail</title>
-        <meta name="description" content="Transaction Detail View" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <Heading>Transaction Detail</Heading>
-      <Box gap="small" direction="row">
+    <Layout title="Transactions" description="Transactions Table View">
+      <Box gap="small" direction="row" alignSelf="center">
         <Link passHref href={`/blocks/${id}`}>
           <Button 
             primary 
@@ -83,7 +72,7 @@ const Detail: NextPage = () => {
           }}
           data={block}
       />
-    </Box>
+    </Layout>
   )
 }
 
