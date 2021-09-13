@@ -44,7 +44,7 @@ const Home: NextPage = () => {
             header: <Text>Hash</Text>,
             render: (datum: Block) => (
               <Link passHref href={`/blocks/${datum.hash}`}>
-                <Anchor label={datum.hash}></Anchor>
+                <Anchor label={`...${datum.hash.toString().substring(35)}`}></Anchor>
               </Link>
             ),
             primary: true,

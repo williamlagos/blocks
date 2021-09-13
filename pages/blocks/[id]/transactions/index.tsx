@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import Head from 'next/head'
-import type { BlockDetail } from '../api/blocks/[id]'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -10,7 +9,7 @@ import axios from 'axios'
 const fetchBlock = async (id: string = "") => {
   let res = { data: [] }
   try {
-    res = await axios.get(`/api/blocks/${id}`)
+    res = await axios.get(`/api/blocks/${id}/transactions`)
   } catch (e) {
     console.error(e)
   } finally {
@@ -36,57 +35,46 @@ const Detail: NextPage = () => {
       gap="medium"
     >
       <Head>
-        <title>Block Detail</title>
-        <meta name="description" content="Block Table View" />
+        <title>Transaction Detail</title>
+        <meta name="description" content="Transaction Detail View" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Heading>Block Detail</Heading>
+      <Heading>Transaction Detail</Heading>
       <Box gap="small" direction="row">
-        <Link passHref href="/blocks/">
+        <Link passHref href={`/blocks/${id}`}>
           <Button 
             primary 
             alignSelf="start"
-            label="Back to Blocks"
-          />
-        </Link>
-        <Link passHref href={`/blocks/${id}/transactions`}>
-          <Button 
-            secondary
-            alignSelf="start"
-            label="Transactions"
+            label="Back to Block"
           />
         </Link>
       </Box>
       <DataTable
         columns={[
           {
-            property: "prev_block",
-            header: <Text>Previous Block</Text>,
-            render: (datum: BlockDetail) => (
-              <Link passHref href={`/blocks/${datum.prev_block}`}>
-                <Anchor label={`...${datum.prev_block.toString().substring(35)}`}></Anchor>
-              </Link>
+            property: "hash",
+            header: <Text>Hash</Text>,
+            render: (datum: any) => (
+              <Text>{`...${datum.hash.toString().substring(35)}`}</Text>
             ),
-            primary: true,
-          },
-          {
-            property: "next_block",
-            header: <Text>Next Block</Text>,
-            render: (datum: BlockDetail) => (
-              <Link passHref href={`/blocks/${datum.next_block}`}>
-                <Anchor label={`...${datum.next_block.toString().substring(35)}`}></Anchor>
-              </Link>
-            ),
-            primary: true,
+            primary: true
           },
           {
             property: "size",
             header: <Text>Size</Text>,
           },
           {
-            property: "block_index",
-            header: <Text>Block Index</Text>
+            property: "weight",
+            header: <Text>Weight</Text>
           },
+          {
+            property: "tx_index",
+            header: <Text>Index</Text>
+          },
+          {
+            property: "time",
+            header: <Text>Time</Text>
+          }
           ]}
           data={block}
       />
