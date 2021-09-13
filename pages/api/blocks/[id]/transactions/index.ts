@@ -1,16 +1,26 @@
 import axios from 'axios'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-export type BlockDetail = {
-  prev_block: string,
-  next_block: string,
+export type TransactionDetail = {
+  hash: string,
+  relayed_by: string,
   block_index: number,
-  size: number
+  block_height: number,
+  size: number,
+  ver: number,
+  vin_sz: number,
+  weight: number,
+  fee: number,
+  lock_time: number,
+  tx_index: number,
+  double_spend: boolean,
+  inputs: Array<any>,
+  out: Array<any>
 } 
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Array<BlockDetail | undefined>>
+  res: NextApiResponse<Array<TransactionDetail | undefined>>
 ) {
   const { query: { id } } = req
   const external = `https://blockchain.info/rawblock/${id}`

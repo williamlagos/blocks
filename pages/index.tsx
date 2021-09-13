@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import type { NextPage } from 'next'
-import React, { useEffect, useState } from 'react'
-import { Box, Image, Button } from 'grommet'
+import { Image, Button } from 'grommet'
 import Layout from '../components/layout'
 
 const Home: NextPage = () => (
