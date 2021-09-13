@@ -8,7 +8,7 @@ import { Box, Main, Anchor, Heading, Button, Paragraph } from 'grommet'
 import axios from 'axios'
 
 const fetchBlock = async (id: string = "") => {
-  let res = { data: [] }
+  let res = { data: null }
   try {
     res = await axios.get(`/api/blocks/${id}`)
   } catch (e) {
@@ -23,7 +23,7 @@ const Detail: NextPage = () => {
   const router = useRouter()
   const { id } = router.query
 
-  const [block, setBlock] = useState<BlockDetail | never[] | null>(null)
+  const [block, setBlock] = useState<BlockDetail | null>(null)
 
   useEffect(() => { (async () => setBlock(await fetchBlock(id?.toString())))() }, [id])
 
