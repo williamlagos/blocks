@@ -58,7 +58,12 @@ const Home: NextPage = () => {
             header: <Text>Height</Text>
           }
           ]}
-          data={blocks}
+          paginate={{
+            step: 10,
+            alignSelf: "center",
+            margin: "small"
+          }}
+        data={blocks}
       />
     </Box>
   )

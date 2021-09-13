@@ -3,7 +3,7 @@ import Head from 'next/head'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { Box, DataTable, Text, Anchor, Heading, Button } from 'grommet'
+import { Box, DataTable, Text, Heading, Button, Pagination } from 'grommet'
 import axios from 'axios'
 
 const fetchBlock = async (id: string = "") => {
@@ -76,6 +76,11 @@ const Detail: NextPage = () => {
             header: <Text>Time</Text>
           }
           ]}
+          paginate={{
+            step: 10,
+            alignSelf: "center",
+            margin: "small"
+          }}
           data={block}
       />
     </Box>
