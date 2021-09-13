@@ -4,7 +4,7 @@ import type { BlockDetail } from '../api/blocks/[id]'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { Box, DataTable, Text, Anchor, Heading, Button } from 'grommet'
+import { Box, Main, Anchor, Heading, Button, Paragraph } from 'grommet'
 import axios from 'axios'
 
 const fetchBlock = async (id: string = "") => {
@@ -23,10 +23,10 @@ const Detail: NextPage = () => {
   const router = useRouter()
   const { id } = router.query
 
-  const [block, setBlock] = useState([])
+  const [block, setBlock] = useState<BlockDetail | never[] | null>(null)
 
   useEffect(() => { (async () => setBlock(await fetchBlock(id?.toString())))() }, [id])
-  
+
   return (
     <Box
       flex
@@ -57,39 +57,19 @@ const Detail: NextPage = () => {
           />
         </Link>
       </Box>
-      <DataTable
-        columns={[
-          {
-            property: "prev_block",
-            header: <Text>Previous Block</Text>,
-            render: (datum: BlockDetail) => (
-              <Link passHref href={`/blocks/${datum.prev_block}`}>
-                <Anchor label={`...${datum.prev_block.toString().substring(35)}`}></Anchor>
-              </Link>
-            ),
-            primary: true,
-          },
-          {
-            property: "next_block",
-            header: <Text>Next Block</Text>,
-            render: (datum: BlockDetail) => (
-              <Link passHref href={`/blocks/${datum.next_block}`}>
-                <Anchor label={`...${datum.next_block.toString().substring(35)}`}></Anchor>
-              </Link>
-            ),
-            primary: true,
-          },
-          {
-            property: "size",
-            header: <Text>Size</Text>,
-          },
-          {
-            property: "block_index",
-            header: <Text>Block Index</Text>
-          },
-          ]}
-          data={block}
-      />
+      {block !== null && (
+        <Main>
+          <Heading>...{id?.toString().substring(35)}</Heading>
+          
+          <Link passHref href={`/blocks/${block.prev_block}`}>
+            <Anchor label={`${block.prev_block.toString()}`}></Anchor>
+          </Link>
+          <Link passHref href={`/blocks/${block.next_block}`}>
+            <Anchor label={`${block.next_block.toString()}`}></Anchor>
+          </Link>
+          <Paragraph>Size {block.size} at index {block.block_index}</Paragraph>
+        </Main>
+      )}
     </Box>
   )
 }
