@@ -1,11 +1,12 @@
-import Link from 'next/link'
-import Head from 'next/head'
-import type { NextPage } from 'next'
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-import { Box, DataTable, Text, Heading, Button, Pagination } from 'grommet'
-import axios from 'axios'
-import Layout from '../../../../components/layout'
+import axios from "axios"
+import Link from "next/link"
+import type { NextPage } from "next"
+import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
+import { Box, DataTable, Text, Heading, Button, Spinner } from "grommet"
+import { useQuery, gql } from "@apollo/client"
+import Layout from "../../../../components/layout"
+import { TransactionDetail } from "../../../api/blocks/[id]/transactions"
 
 const fetchBlock = async (id: string = "") => {
   let res = { data: [] }
@@ -23,9 +24,40 @@ const Detail: NextPage = () => {
   const router = useRouter()
   const { id } = router.query
 
-  const [block, setBlock] = useState([])
+  const QUERY = gql`
+    query {
+      getTransactions(hash: "${id?.toString()}") {
+        hash
+        tx_index
+        block_height
+        size
+        weight
+        time
+      }
+    }
+  `;
 
-  useEffect(() => { (async () => setBlock(await fetchBlock(id?.toString())))() }, [id])
+  // const [block, setBlock] = useState([]);
+
+  const { data, loading, error } = useQuery(QUERY);
+
+  // useEffect(() => { (async () => setBlock(await fetchBlock(id?.toString())))() }, [id])
+
+  if (loading) {
+    return (
+      <Layout title="Blocks" description="Fetching API">
+        <Box gap="small" direction="column" alignSelf="center" align="center">
+          <Spinner />
+          <Heading level={2}>Fetching Transactions...</Heading>
+        </Box>
+      </Layout>
+    );
+  }
+
+  if (error) {
+    console.error(error);
+    return null;
+  }
   
   return (
     <Layout title="Transactions" description="Transactions Table View">
@@ -70,7 +102,7 @@ const Detail: NextPage = () => {
             alignSelf: "center",
             margin: "small"
           }}
-          data={block}
+          data={data.getTransactions}
       />
     </Layout>
   )

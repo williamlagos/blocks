@@ -17,6 +17,7 @@ export const typeDefs = gql`
   type Transaction {
     hash: String
     block_index: Int
+    tx_index: String
     block_height: Int
     size: Int
     weight: Int
@@ -25,6 +26,6 @@ export const typeDefs = gql`
   
   type Query {
     getBlocks: [Block]
-    getBlock(hash: String!): BlockDetail!
-    getTransactions(hash: String!): [Transaction]!
+    getBlock(hash: String): BlockDetail!
+    getTransactions(hash: String): [Transaction]
   }`

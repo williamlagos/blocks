@@ -12,7 +12,7 @@ export type TransactionDetail = {
   weight: number,
   fee: number,
   lock_time: number,
-  tx_index: number,
+  tx_index: string,
   double_spend: boolean,
   inputs: Array<any>,
   out: Array<any>

@@ -1,12 +1,13 @@
-import Link from 'next/link'
-import Head from 'next/head'
-import type { BlockDetail } from '../api/blocks/[id]'
+import axios from "axios"
+import Link from "next/link"
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { Box, Main, Anchor, Heading, Button, Paragraph } from 'grommet'
-import axios from 'axios'
-import Layout from '../../components/layout'
+import { Box, Main, Anchor, Heading, Button, Spinner, Paragraph } from 'grommet'
+import { useQuery, gql } from "@apollo/client"
+import Layout from "../../components/layout"
+import type { BlockDetail } from "../api/blocks/[id]"
+
 
 const fetchBlock = async (id: string = "") => {
   let res = { data: null }
@@ -24,13 +25,42 @@ const Detail: NextPage = () => {
   const router = useRouter()
   const { id } = router.query
 
-  const [block, setBlock] = useState<BlockDetail | null>(null)
+  const QUERY = gql`
+    query {
+      getBlock(hash: "${id?.toString()}") {
+        prev_block
+        next_block
+        block_index
+        size
+      }
+    }
+  `;
 
-  useEffect(() => { (async () => setBlock(await fetchBlock(id?.toString())))() }, [id])
+  // const [block, setBlock] = useState<BlockDetail | null>(null)
+
+  const { data, loading, error } = useQuery(QUERY);
+
+  // useEffect(() => { (async () => setBlock(await fetchBlock(id?.toString())))() }, [id])
+
+  if (loading) {
+    return (
+      <Layout title="Blocks" description="Fetching API">
+        <Box gap="small" direction="column" alignSelf="center" align="center">
+          <Spinner />
+          <Heading level={2}>Fetching Block Details...</Heading>
+        </Box>
+      </Layout>
+    );
+  }
+
+  if (error) {
+    console.error(error);
+    return null;
+  }
 
   return (
     <Layout title="Block Detail" description="Block Detail View">
-      <Box gap="small" direction="row" alignSelf="center">
+      <Box gap="small" direction="row" >
         <Link passHref href="/blocks/">
           <Button 
             primary 
@@ -46,17 +76,17 @@ const Detail: NextPage = () => {
           />
         </Link>
       </Box>
-      {block !== null && (
+      {data.getBlock !== null && (
         <Main align="center">
           <Heading>...{id?.toString().substring(35)}</Heading>
           
-          <Link passHref href={`/blocks/${block.prev_block}`}>
-            <Anchor label={`${block.prev_block.toString()}`}></Anchor>
+          <Link passHref href={`/blocks/${data.getBlock.prev_block}`}>
+            <Anchor label={`${data.getBlock.prev_block.toString()}`}></Anchor>
           </Link>
-          <Link passHref href={`/blocks/${block.next_block}`}>
-            <Anchor label={`${block.next_block.toString()}`}></Anchor>
+          <Link passHref href={`/blocks/${data.getBlock.next_block}`}>
+            <Anchor label={`${data.getBlock.next_block.toString()}`}></Anchor>
           </Link>
-          <Paragraph>Size {block.size} at index {block.block_index}</Paragraph>
+          <Paragraph>Size {data.getBlock.size} at index {data.getBlock.block_index}</Paragraph>
         </Main>
       )}
     </Layout>

@@ -1,11 +1,11 @@
-import Link from 'next/link'
-import Head from 'next/head'
-import type { Block } from '../api/blocks'
-import type { NextPage } from 'next'
-import React, { useEffect, useState } from 'react'
-import { Box, DataTable, Text, Meter, Heading, Anchor } from 'grommet'
-import axios, { AxiosResponse } from 'axios'
-import Layout from '../../components/layout'
+import axios from "axios"
+import Link from "next/link"
+import type { NextPage } from "next"
+import React, { useEffect, useState } from "react"
+import { DataTable, Text, Anchor, Heading, Spinner, Box } from "grommet"
+import { useQuery, gql } from "@apollo/client"
+import Layout from "../../components/layout"
+import type { Block } from "../api/blocks"
 
 const fetchBlocks = async () => {
   let res = { data: [] }
@@ -20,9 +20,37 @@ const fetchBlocks = async () => {
 
 const Home: NextPage = () => {
 
-  const [blocks, setBlocks] = useState([])
+  const QUERY = gql`
+    query {
+      getBlocks {
+        hash
+        height
+        time
+      }
+    }
+  `;
 
-  useEffect(() => { (async () => setBlocks(await fetchBlocks()))() }, [])
+  // const [blocks, setBlocks] = useState([]);
+
+  const { data, loading, error } = useQuery(QUERY);
+
+  // useEffect(() => { (async () => setBlocks(await fetchBlocks()))() }, [])
+
+  if (loading) {
+    return (
+      <Layout title="Blocks" description="Fetching API">
+        <Box align="center">
+          <Spinner />
+          <Heading level={2}>Fetching Blocks...</Heading>
+        </Box>
+      </Layout>
+    )
+  }
+
+  if (error) {
+    console.error(error);
+    return null;
+  }
 
   return (
     <Layout title="Blocks" description="Block Table View">
@@ -52,7 +80,7 @@ const Home: NextPage = () => {
             alignSelf: "center",
             margin: "small"
           }}
-        data={blocks}
+        data={data.getBlocks}
       />
     </Layout>
   )
