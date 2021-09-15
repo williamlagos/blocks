@@ -4,6 +4,7 @@ import type { NextPage } from "next"
 import React, { useEffect, useState } from "react"
 import { DataTable, Text, Anchor, Heading, Spinner, Box } from "grommet"
 import { useQuery, gql } from "@apollo/client"
+import Loading from "../../components/loading"
 import Layout from "../../components/layout"
 import type { Block } from "../api/blocks"
 
@@ -39,10 +40,7 @@ const Home: NextPage = () => {
   if (loading) {
     return (
       <Layout title="Blocks" description="Fetching API">
-        <Box align="center">
-          <Spinner />
-          <Heading level={2}>Fetching Blocks...</Heading>
-        </Box>
+        <Loading message="Fetching Blocks..." />
       </Layout>
     )
   }

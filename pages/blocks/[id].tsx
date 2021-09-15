@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Box, Main, Anchor, Heading, Button, Spinner, Paragraph } from 'grommet'
 import { useQuery, gql } from "@apollo/client"
+import Loading from "../../components/loading"
 import Layout from "../../components/layout"
 import type { BlockDetail } from "../api/blocks/[id]"
 
@@ -45,10 +46,7 @@ const Detail: NextPage = () => {
   if (loading) {
     return (
       <Layout title="Blocks" description="Fetching API">
-        <Box gap="small" direction="column" alignSelf="center" align="center">
-          <Spinner />
-          <Heading level={2}>Fetching Block Details...</Heading>
-        </Box>
+        <Loading message="Fetching Block Details..." />
       </Layout>
     );
   }
