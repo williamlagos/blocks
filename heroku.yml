@@ -8,6 +8,6 @@ build:
 release:
     image: web
     command:
-        - echo "Started"
+        - echo "started"
 run:
     web: "yarn start"
